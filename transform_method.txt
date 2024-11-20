@@ -1,0 +1,20 @@
+
+
+def transform(df, xrate_path):
+    ''' This function accesses the CSV file for exchange rate
+    information, and adds three columns to the data frame, each
+    containing the transformed version of Market Cap column to
+    respective currencies'''
+    xrate_path = './exchange_rate.csv'
+    xrate = pd.read_csv(xrate_path)
+    xrate = dataframe.set_index('currency').to_dict()['exchange_rate']
+    
+    for currency, exchange_rate in xrate.items():
+        df['MC_GBP_Billion'] = [np.round(x*exchange_rate['GBP'],2) for x in df['MC_USD_Billion']]
+        df['MC_EUR_Billion'] = [np.round(x*exchange_rate['EUR'],2) for x in df['MC_USD_Billion']]
+        df['MC_INR_Billion'] = [np.round(x*exchange_rate['INR'],2) for x in df['MC_USD_Billion']]
+    
+    return df
+
+df = transform(df, xrate_path)
+print(df.head())
